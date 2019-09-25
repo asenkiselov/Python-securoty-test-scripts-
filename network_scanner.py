@@ -4,7 +4,7 @@ import optparse
 
 def get_arguments():
     parser = optparse.OptionParser()
-    parser.add_option("-t", "--target", dest="target_network", help="Please specify target or target network: example 192.168.1.1/24")
+    parser.add_option("-t", "--target", dest="target_network", help="Please specify target or target network: example 192.168.1.0/24")
 
     (options, arguments) = parser.parse_args()
     print(options.target_network)
