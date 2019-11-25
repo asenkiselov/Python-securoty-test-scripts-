@@ -4,5 +4,5 @@ Anyone who wants to use ARP spoof, packet sniffer , DNS spoof,keylogger,malware 
 
 
 Installation
-
+apt-get install build-essential python-dev libnetfilter-queue-dev
 sudo pip install requirements.txt
