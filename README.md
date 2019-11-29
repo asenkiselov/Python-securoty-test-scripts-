@@ -12,6 +12,16 @@ or alternatively:
 
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
+On RedHat based systems this is also enabled when restarting the network service:
+
+service network restart
+
+and on Debian/Ubuntu systems this can be also done restarting the procps service:
+
+/etc/init.d/procps restart
+
+
+
 DNS_spoofer:
 Capture network trafic and redirect dns request on tha victim machne to dns to different host.
 Firs of all you must activate arp_spoofer script, after that execute next commands:
