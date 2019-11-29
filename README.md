@@ -24,6 +24,8 @@ sudo iptables -I OUTPUT -j NFQUEUE --queue-num 0  )
 To make reset: sudo iptables --flush
 
 
-Installation
+Installation python packet:
+
 apt-get install build-essential python-dev libnetfilter-queue-dev
+
 sudo pip install requirements.txt
