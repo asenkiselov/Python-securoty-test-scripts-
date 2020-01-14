@@ -3,6 +3,19 @@
 import scapy.all as scapy
 from scapy.layers import http
 
+
+
+#def get_arguments():
+#    parser = optparse.OptionParser()
+#    parser.add_option("-i", "--interface", dest="interface", help="Please specify network interface : example:eth,wlan and etc...")
+
+#    (options, arguments) = parser.parse_args()
+#    print(options.target_network)
+#    if not options.target_network:
+#        parser.error("[-] Please specify  correct interface: example eth,wlan,tun  or use --help for info.")
+#    return options
+
+
 def sniffer(interface):
     scapy.sniff(iface=interface, store=False, prn=process_sniffed_packed)
 
@@ -27,4 +40,7 @@ def process_sniffed_packed(packet):
             print("\n\n[+] Possible user and password >> " + login_info + "\n\n")
         
 
-sniffer("wlan0")
+#interface = get_arguments()
+
+
+sniffer("eth0")
